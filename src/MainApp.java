@@ -23,12 +23,13 @@ public class MainApp extends PApplet{
     public float[][] planes;
     public Grid grid;
 
-    public int key_color;
+    public Util.Color key_color;
 
     // mouse rotation
     public PVector rotation;
     public PVector prev_rot;
     public PVector click;
+    public int z_translate;
 
 
     public void setup() {
@@ -64,8 +65,11 @@ public class MainApp extends PApplet{
         // values determined by experimentation
         // rotate_x = 100.26076f;
         // rotate_y = 106.40513f;
-        rotation = new PVector();
+
+        // determined by experiment
+        rotation = new PVector(-0.5357561f, -0.34405947f, 0);
         prev_rot = new PVector();
+        z_translate = -600;
 
         // start OSC
         oscP5 = new OscP5(this, settings);
@@ -88,7 +92,7 @@ public class MainApp extends PApplet{
     
     // return a background color based on the current MIDI note value
     // returned as a 0xaabbcc color.
-    int color_from_sound(SoundData sound) {
+    Util.Color color_from_sound(SoundData sound) {
         int hue = (int) map((float) sound.pitch_raw_midi, 20, 120, 0, 255);
         int brightness = (int) map((float) sound.loudness, -15, 0, 80, 0.8f * 255.0f);
         int saturation = 70;
@@ -98,11 +102,10 @@ public class MainApp extends PApplet{
             brightness = 255;
         }
 
-        return color(
+        return util.new Color(
                 hue,// hue        0-360
                 saturation, // saturation 0-100 (nice at 70)
-                brightness,  // brightness 0-100 (nice at 97)
-                0.08f * 255
+                brightness  // brightness 0-100 (nice at 97)
         );
     }
 
@@ -118,11 +121,16 @@ public class MainApp extends PApplet{
         Collections.rotate(Arrays.asList(planes), -1);
 
         noStroke();
+        pushMatrix();
+        translate(0, 0, z_translate);
         for (int p=0; p<planes.length && planes[p] != null; p++) {
             int z = SPACING * p;
             // depth shading. there should be a way to do this with light, though.
             float frontness = map(p, 0, planes.length-1, 1, 0);
-            int box_color = lerpColor(key_color, color(0, 0, 255, 0.8f * 255), 1.0f-frontness);
+            int box_color = lerpColor(
+                    key_color.clone().setOpacity(180).color(),
+                    key_color.clone().reflect().setOpacity(255).setBrightness(255).color(),
+                    1.0f-frontness);
             if (p==planes.length-1) box_color = color(0,0, 255, 255);
             fill(box_color);
             //if (p==0) fill(230);
@@ -149,6 +157,7 @@ public class MainApp extends PApplet{
                 popMatrix();
             }
         }
+        popMatrix();
     }
 
 
@@ -160,12 +169,11 @@ public class MainApp extends PApplet{
     }
 
     public void draw() {
-
         rotateX(rotation.y);
         rotateY(rotation.x);
 
         key_color = color_from_sound(latest_with_pitch);
-        background(key_color);
+        background(key_color.color());
         // lights();
         draw_planes();
         // draw_grid();
@@ -196,6 +204,16 @@ public class MainApp extends PApplet{
         drag.sub(click);
         rotation = prev_rot.get();
         rotation.add(drag);
+    }
+
+    public void keyReleased() {
+        // full screen
+        if (key == 'j') {
+            z_translate += 100;
+        }
+        if (key == 'k') {
+            z_translate -= 100;
+        }
     }
 
 //    public void mousePressed() {

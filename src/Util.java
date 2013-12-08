@@ -35,4 +35,58 @@ public class Util {
             parent.println("scaler.scale(n) -> " + this.scale(n) + ", expected "+expected);
         }
     }
+
+    /*
+    Wrapper around PApplet#color for EZ transforms
+     */
+    public class Color {
+        public int hue;
+        public int saturation;
+        public int brightness;
+        public int opacity;
+
+        public Color(int hue_, int saturation_, int brightness_, int opacity_) {
+            hue = hue_;
+            saturation = saturation_;
+            brightness = brightness_;
+            opacity = opacity_;
+        }
+
+        public Color(int hue_, int saturation_, int brightness_) {
+            this(hue_, saturation_, brightness_, 255);
+        }
+
+        public Color clone() {
+            return new Color(hue, saturation, brightness, opacity);
+        }
+
+        // returns the Processing color as a hex int
+        public int color() {
+            return parent.color(hue, saturation, brightness, opacity);
+        }
+
+        // mutation methods
+
+        public Color setHue(int hue_) {
+            hue = hue_;
+            return this;
+        }
+        public Color setSaturation(int saturation_) {
+            saturation = saturation_;
+            return this;
+        }
+        public Color setBrightness(int brightness_) {
+            brightness = brightness_;
+            return this;
+        }
+        public Color setOpacity(int opacity_) {
+            opacity = opacity_;
+            return this;
+        }
+
+        public Color reflect() {
+            hue = (hue + 255/2) % 255;
+            return this;
+        }
+    }
 }
