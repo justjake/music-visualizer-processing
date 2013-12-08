@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="osc_visualizer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/osc_visualizer_jar</output-path>
+    <root id="archive" name="osc_visualizer.jar">
+      <element id="module-output" name="osc_visualizer" />
+      <element id="extracted-dir" path="$USER_HOME$/apps/processing-2.1/core/library/gluegen-rt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/apps/processing-2.1/core/library/core.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/apps/processing-2.1/core/library/jogl-all.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../libraries/oscP5/library/oscP5.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
