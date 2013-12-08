@@ -1,14 +1,18 @@
 import processing.core.*;
 import oscP5.*;
-
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 public class MainApp extends PApplet{
 
     // display params for the cube thing
+    public static final boolean LIGHTS = false;
     public static final int SPACING = -200;
-    public static final int DEPTH = 20;
+    public static final int DEPTH = 30;
+    public static final PVector POSITION = new PVector(-100.0f, -300.0f, -200.0f);
+    public static final PVector ROTATION = new PVector(0.29031897f, -0.33824158f, 0.0f);
+            // public static final int Z_OFFSET = 500;
+    public static final int FRAMERATE = 30;
+    public static final Spectrograph.Direction DIRECTION = Spectrograph.Direction.FORWARD;
 
     public static final int PORT = 11337; // for OSC messages
 
@@ -20,7 +24,6 @@ public class MainApp extends PApplet{
     public SoundData latest_with_pitch;
     public MessageParser parser;
 
-    public float[][] planes;
     public Grid grid;
 
     public Util.Color key_color;
@@ -29,12 +32,22 @@ public class MainApp extends PApplet{
     public PVector rotation;
     public PVector prev_rot;
     public PVector click;
+
+    public PVector position;
     public int z_translate;
+
+    // spectrograph
+    public Spectrograph spectro;
+
+    public HashMap<Integer, Integer> midi_counts;
+    public int midi_max = 0, midi_min = 999;
+
+    boolean awaiting_render_attack;
 
 
     public void setup() {
         util = new Util(this);
-        planes = new float[DEPTH][];
+        spectro = new Spectrograph(this, DEPTH, SPACING, DIRECTION);
 
         // grid with 5 random sources
         grid = new Grid(this, 50, 50);
@@ -51,9 +64,9 @@ public class MainApp extends PApplet{
 
         // basic Processing config
         size(1920, 1080, P3D);
-        frameRate(30);
+        frameRate(FRAMERATE);
         sphereDetail(12);
-        //stroke(255);
+        //stroke(0);
         noStroke();
         colorMode(HSB);
 
@@ -61,15 +74,17 @@ public class MainApp extends PApplet{
         parser = new MessageParser();
         current_sound = new SoundData();
         latest_with_pitch = new SoundData();
+        midi_counts = util.new DefaultHashMap<Integer, Integer>(0);
 
         // values determined by experimentation
         // rotate_x = 100.26076f;
         // rotate_y = 106.40513f;
 
         // determined by experiment
-        rotation = new PVector(-0.5357561f, -0.34405947f, 0);
+        click = new PVector();
         prev_rot = new PVector();
-        z_translate = -600;
+        position = POSITION.get();
+        rotation = ROTATION.get();
 
         // start OSC
         oscP5 = new OscP5(this, settings);
@@ -83,8 +98,16 @@ public class MainApp extends PApplet{
         if (parser.parse(mess)) {
             current_sound = parser.flush();
             // not every OSC packet has pitch data;
-            if (current_sound.hasPitchData())
+            if (current_sound.hasPitchData()) {
                 latest_with_pitch = current_sound;
+                int midi = (int) latest_with_pitch.pitch_raw_midi;
+                midi_max = max(midi, midi_max);
+                midi_min = min(midi, midi_min);
+                // used for statistic tracking of the values we see
+                midi_counts.put(midi, midi_counts.get(midi) + 1);
+            }
+            if (current_sound.attack)
+                awaiting_render_attack = true;
         }
     }
 
@@ -93,13 +116,16 @@ public class MainApp extends PApplet{
     // return a background color based on the current MIDI note value
     // returned as a 0xaabbcc color.
     Util.Color color_from_sound(SoundData sound) {
-        int hue = (int) map((float) sound.pitch_raw_midi, 20, 120, 0, 255);
-        int brightness = (int) map((float) sound.loudness, -15, 0, 80, 0.8f * 255.0f);
-        int saturation = 70;
+        int hue = (int) map((float) sound.pitch_raw_midi, midi_min, midi_max, 0, 255);
+        int brightness = (int) map((float) sound.loudness, -15, 0, 80, 0.7f * 255.0f);
+        int saturation = (int) (0.6f * 255.0f);
 
-        if (sound.attack==true) {
+        // this almost never happens, just because there's a low chance that
+        // there's still an attack sound in the current_sound field on a screen refresh
+        if (sound.attack==true || awaiting_render_attack) {
             saturation = 0;
             brightness = 255;
+            awaiting_render_attack = false;
         }
 
         return util.new Color(
@@ -110,55 +136,6 @@ public class MainApp extends PApplet{
     }
 
     // various drawing functions
-    void draw_planes() {
-        int cube_space = (int) ((width * .3) / 25.0);
-        int cube_height = (int) ((width * .7) / 25.0);
-        //println("space="+cube_space+" height="+cube_height);
-        // spectrograph columns
-
-        // push
-        planes[0] = util.doubleToFloatArray(current_sound.bark);
-        Collections.rotate(Arrays.asList(planes), -1);
-
-        noStroke();
-        pushMatrix();
-        translate(0, 0, z_translate);
-        for (int p=0; p<planes.length && planes[p] != null; p++) {
-            int z = SPACING * p;
-            // depth shading. there should be a way to do this with light, though.
-            float frontness = map(p, 0, planes.length-1, 1, 0);
-            int box_color = lerpColor(
-                    key_color.clone().setOpacity(180).color(),
-                    key_color.clone().reflect().setOpacity(255).setBrightness(255).color(),
-                    1.0f-frontness);
-            if (p==planes.length-1) box_color = color(0,0, 255, 255);
-            fill(box_color);
-            //if (p==0) fill(230);
-            //if (latest_with_pitch.attack) fill(255);
-
-            for (int i=0; i<planes[0].length; i++) {
-                pushMatrix();
-                // translate to col start location
-                int x = cube_space + (int) ((cube_space + cube_height)*(i + 0.5));
-                int y = height + cube_height + cube_space;
-                translate(x, y, z);
-
-                float mini = min(planes[p]);
-                int cubes = (int) map(planes[p][i], -15, 30, 0, 31.0f);
-
-                for (int j=0; j<cubes; j++) {
-                    // draw some cubes bro
-                    //rect(0, 0, cube_height, cube_height);
-                    box(cube_height);
-                    //sphere(cube_height / 2);
-                    translate(0, -1 * (cube_space + cube_height), 0);
-                }
-
-                popMatrix();
-            }
-        }
-        popMatrix();
-    }
 
 
     void draw_grid() {
@@ -169,14 +146,25 @@ public class MainApp extends PApplet{
     }
 
     public void draw() {
+        pushMatrix();
+        translate(position.x, position.y, position.z);
         rotateX(rotation.y);
         rotateY(rotation.x);
+        rotateZ(rotation.z);
 
         key_color = color_from_sound(latest_with_pitch);
-        background(key_color.color());
-        // lights();
-        draw_planes();
+        background(key_color.clone().setBrightness(key_color.brightness / 2).color());
+
+        if (LIGHTS) lights();
+
+        Util.Color spec_color = key_color.clone().reflect();
+        spec_color.setBrightness((int) map(spec_color.brightness, 0, 255, 210, 255));
+        spectro.pushPlane(util.doubleToFloatArray(current_sound.bark), spec_color);
+
+        spectro.draw(key_color);
+
         // draw_grid();
+        popMatrix();
     }
 
     PVector screenTo2pi(PVector v) {
@@ -209,10 +197,38 @@ public class MainApp extends PApplet{
     public void keyReleased() {
         // full screen
         if (key == 'j') {
-            z_translate += 100;
+            position.z += 100;
         }
         if (key == 'k') {
-            z_translate -= 100;
+            position.z -= 100;
+        }
+
+        if (keyCode == UP) {
+            position.y -= 100;
+        }
+
+        if (keyCode == DOWN) {
+            position.y += 100;
+        }
+        if (keyCode == LEFT) {
+            position.x += 100;
+        }
+
+        if (keyCode == RIGHT) {
+            position.x -= 100;
+        }
+
+        if (key == 'm') {
+            println(midi_counts.toString());
+            println("max: "+ midi_max,
+                    " min: "+ midi_min);
+        }
+
+        // print position/angle info
+        if (key == 'p') {
+            println("Position: "+position.toString());
+            println("Rotation: "+rotation.toString());
+
         }
     }
 

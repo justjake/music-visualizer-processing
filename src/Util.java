@@ -1,4 +1,5 @@
 import processing.core.*;
+import java.util.*;
 public class Util {
 
     private PApplet parent;
@@ -87,6 +88,26 @@ public class Util {
         public Color reflect() {
             hue = (hue + 255/2) % 255;
             return this;
+        }
+    }
+
+    // implmentation from stack overflow
+    // http://stackoverflow.com/questions/7519339/hashmap-to-return-default-value-for-non-found-keys
+    //
+    // consider using a treemap for sorted keys, but I have concerns about where there is hidden
+    // threading buisness going on in MainApp.java with the oscP5 things, so I ain't touching a
+    // > Note that this implementation is not synchronized. If multiple threads access a map concurrently,
+    // > and at least one of the threads modifies the map structurally, it must be synchronized externally.
+    //  -- TreeMap javadoc
+    public class DefaultHashMap<K,V> extends HashMap<K,V> {
+        protected V defaultValue;
+        public DefaultHashMap(V defaultValue) {
+            this.defaultValue = defaultValue;
+        }
+        @Override
+        public V get(Object k) {
+            V v = super.get(k);
+            return ((v == null) && !this.containsKey(k)) ? this.defaultValue : v;
         }
     }
 }
