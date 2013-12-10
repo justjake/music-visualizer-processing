@@ -157,6 +157,7 @@ public class VisualizerApplet extends PApplet{
         // set titlebar if one exists
         if (frame != null) {
             frame.setTitle("OSC Visualizer");
+            frame.setResizable(true);
         }
 
         // basic Processing config
