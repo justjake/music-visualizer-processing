@@ -2,6 +2,9 @@
 
 This is my final project in Music 158 at UC Berkeley.
 
+Receives OSC messages with audio data on port 11337 from a server built in Max MSP with
+the CNMAT externals library.
+
 ## Requirements
 
 - Processing 2.x, a creative programming environment and library:
@@ -20,32 +23,30 @@ This is my final project in Music 158 at UC Berkeley.
 Run by double-clicking the "client" jar, or running `java -jar osc_visualizer.jar`. From the built-in
 program help:
 
-  OSC Visualizer
-    (c) Jake Teton-Landis, 2013
-    <just.1.jake@gmail.com>
-    https://github.com/justjake/music-visualizer-processing
-    --window to run in a window
-    --help for help
-  Controls:
-    Arrow keys   : change model offest on X/Y axis
-    mouse        : change model rotation
-    j/k          : change model offset on Z axis
-    1 through 0  : view preset offset/rotation
-    p            : print position info
-    z/k          : change signal minimum cuttoff
-    m            : print MIDI value debug info
-  Command-Line Options:
-   --backwards   : Run spectrograph back-to-front
-   --depth N     : Number of planes in the spectrograph
-   --framerate N : FPS target
-   --help        : Show help text
-   --lights      : Enable default lighting
-   --port N      : UDP port for incoming OSC messages
-   --spacing N   : Space between planes in the spectrograph
-   --window      : Run in window instead of full screen
+    OSC Visualizer
+      (c) Jake Teton-Landis, 2013
+      <just.1.jake@gmail.com>
+      https://github.com/justjake/music-visualizer-processing
+      --window to run in a window
+      --help for help
+    Controls:
+      Arrow keys   : change model offest on X/Y axis
+      mouse        : change model rotation
+      j/k          : change model offset on Z axis
+      1 through 0  : view preset offset/rotation
+      p            : print position info
+      z/k          : change signal minimum cuttoff
+      m            : print MIDI value debug info
+    Command-Line Options:
+     --backwards   : Run spectrograph back-to-front
+     --depth N     : Number of planes in the spectrograph
+     --framerate N : FPS target
+     --help        : Show help text
+     --lights      : Enable default lighting
+     --port N      : UDP port for incoming OSC messages
+     --spacing N   : Space between planes in the spectrograph
+     --window      : Run in window instead of full screen
 
-Receives OSC messages with audio data on port 11337 from a server built in Max MSP with
-the CNMAT externals library.
 
 ## Video
 
