@@ -14,18 +14,19 @@ public class MainClass {
             "OSC Visualizer",
             "  (c) Jake Teton-Landis, 2013",
             "  <just.1.jake@gmail.com>",
+            "  https://github.com/justjake/music-visualizer-processing",
             "  --window to run in a window",
             "  --help for help"
     };
     public static final String[] HELP_TEXT = new String[] {
             "Controls:",
-            "  Arrow keys - change model offest on X/Y axis",
-            "  mouse - change model rotation",
-            "  j/k - change model offset on Z axis",
-            "  1 through 0 - view preset offset/rotation",
-            "  p - print position info",
-            "  z/k - change signal minimum cuttoff",
-            "  m - print MIDI value debug info"
+            "  Arrow keys   : change model offest on X/Y axis",
+            "  mouse        : change model rotation",
+            "  j/k          : change model offset on Z axis",
+            "  1 through 0  : view preset offset/rotation",
+            "  p            : print position info",
+            "  z/k          : change signal minimum cuttoff",
+            "  m            : print MIDI value debug info"
     };
 
     static void printEachLine(String[] text) {
@@ -34,27 +35,27 @@ public class MainClass {
     }
 
     public  static void main(String args[]) {
-        boolean use_fs = true;
-
         printEachLine(WELCOME_TEXT);
 
-        if (args.length > 0) {
-            for( String a : args) {
-                if (a.equals("--window") || a.equals("--windowed")) {
-                    PApplet.println("opening in a window...");
-                    use_fs = false;
-                }
+        VisualizerApplet.Parameters params = VisualizerApplet.Parameters.Parse(args);
 
-                if (a.equals("--help")) {
-                    printEachLine(HELP_TEXT);
-                }
-            }
+        if (params.failure != null) {
+            System.err.println("Failure: "+params.failure.getMessage());
+            params.parser.printUsage(System.err);
+            System.exit(1);
         }
 
-        if (use_fs) {
-            VisualizerApplet.main("org.teton_landis.jake.osc_visualizer.VisualizerApplet", args);
-        } else {
+        if (params.show_help) {
+            printEachLine(HELP_TEXT);
+            System.out.println("Command-Line Options:");
+            params.parser.printUsage(System.out);
+            System.exit(0);
+        }
+
+        if (params.window) {
             VisualizerWindowed.main("org.teton_landis.jake.osc_visualizer.VisualizerWindowed", args);
+        } else {
+            VisualizerApplet.main("org.teton_landis.jake.osc_visualizer.VisualizerApplet", args);
         }
     }
 }

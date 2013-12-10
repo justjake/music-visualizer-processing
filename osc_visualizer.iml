@@ -9,6 +9,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="Processing 2.1" level="application" />
     <orderEntry type="library" exported="" name="oscP5" level="project" />
+    <orderEntry type="library" name="args4j-2.0.21" level="project" />
   </component>
+  <component name="POM File Configuration" pomFile="" />
 </module>
 

@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-Class-Path: lib/gluegen-rt.jar lib/core.jar lib/jogl-all.jar lib/oscP5.jar
+Class-Path: lib/gluegen-rt.jar lib/core.jar lib/jogl-all.jar
 Main-Class: org.teton_landis.jake.osc_visualizer.MainClass
 

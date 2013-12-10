@@ -14,7 +14,6 @@ public class VisualizerWindowed extends VisualizerApplet {
     public boolean sketchFullScreen() {
         return false;
     }
-
     // required or else oscEvent doesn't work :(
     public void oscEvent(OscMessage mess) {
         super.oscEvent(mess);

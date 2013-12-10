@@ -1,13 +1,8 @@
 <component name="ArtifactManager">
-  <artifact name="client">
+  <artifact build-on-make="true" name="client">
     <output-path>$PROJECT_DIR$/out/artifacts/client</output-path>
     <root id="root">
-      <element id="archive" name="osc_visualizer.jar">
-        <element id="module-output" name="osc_visualizer" />
-      </element>
       <element id="directory" name="lib">
-        <element id="library" level="application" name="Processing 2.1" />
-        <element id="library" level="project" name="oscP5" />
         <element id="file-copy" path="$USER_HOME$/apps/processing-2.1/core/library/gluegen-rt-natives-linux-amd64.jar" />
         <element id="file-copy" path="$USER_HOME$/apps/processing-2.1/core/library/gluegen-rt-natives-linux-armv6hf.jar" />
         <element id="file-copy" path="$USER_HOME$/apps/processing-2.1/core/library/gluegen-rt-natives-linux-i586.jar" />
@@ -21,6 +16,12 @@
         <element id="file-copy" path="$USER_HOME$/apps/processing-2.1/core/library/jogl-all-natives-windows-amd64.jar" />
         <element id="file-copy" path="$USER_HOME$/apps/processing-2.1/core/library/jogl-all-natives-windows-i586.jar" />
         <element id="file-copy" path="$USER_HOME$/apps/processing-2.1/core/library/export.txt" />
+        <element id="library" level="application" name="Processing 2.1" />
+      </element>
+      <element id="archive" name="osc_visualizer.jar">
+        <element id="module-output" name="osc_visualizer" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/lib/args4j-2.0.21.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/../libraries/oscP5/library/oscP5.jar" path-in-jar="/" />
       </element>
     </root>
   </artifact>
