@@ -1,11 +1,10 @@
-/**
+package org.teton_landis.jake.osc_visualizer; /**
  * Handles setup and drawing for the main spectrograph visualization
  * osc_visualizer
  * by Jake Teton-Landis
  *
  * @date 12/7/13 10:27 PM
  */
-import org.omg.PortableInterceptor.LOCATION_FORWARD;
 import processing.core.*;
 import java.util.*;
 
@@ -28,14 +27,12 @@ public class Spectrograph {
     public PApplet parent;
     public int z_spacing;
     private Plane[] planes;
-    private Util util;
     public Direction direction;
 
     public Spectrograph(PApplet parent_, int depth, int z_spacing_, Direction direction_) {
         parent = parent_;
         planes = new Plane[depth];
         z_spacing = z_spacing_;
-        util = new Util(parent);
         direction = direction_;
     }
 

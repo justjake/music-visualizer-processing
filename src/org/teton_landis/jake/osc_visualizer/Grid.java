@@ -1,9 +1,11 @@
-import org.omg.CORBA.PUBLIC_MEMBER;
+package org.teton_landis.jake.osc_visualizer;
+
 import processing.core.*;
 import java.util.*;
 
+
 /**
- * Grid - a simple distortion grid with bulge forces
+ * org.teton_landis.jake.osc_visualizer.Grid - a simple distortion grid with bulge forces
  * osc_visualizer
  * by Jake Teton-Landis
  *

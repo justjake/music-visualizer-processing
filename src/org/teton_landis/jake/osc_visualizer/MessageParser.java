@@ -1,8 +1,10 @@
+package org.teton_landis.jake.osc_visualizer;
+
 import oscP5.*;
 import processing.core.PApplet;
 
 /**
- * build a SoundData object from successive OSC messages until a complete
+ * build a org.teton_landis.jake.osc_visualizer.SoundData object from successive OSC messages until a complete
  * bundle is re-constructed and then flush()'d
  */
 class MessageParser {
@@ -118,7 +120,7 @@ class MessageParser {
     }
 
     /**
-     * get the current SoundData and start building a new one.
+     * get the current org.teton_landis.jake.osc_visualizer.SoundData and start building a new one.
      * the parse loop looks like
      * if (parser.parse(message)) { return parser.flush() }
      */

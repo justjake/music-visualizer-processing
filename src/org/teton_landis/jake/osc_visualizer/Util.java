@@ -1,3 +1,5 @@
+package org.teton_landis.jake.osc_visualizer;
+
 import processing.core.*;
 import java.util.*;
 public class Util {
@@ -95,7 +97,7 @@ public class Util {
     // http://stackoverflow.com/questions/7519339/hashmap-to-return-default-value-for-non-found-keys
     //
     // consider using a treemap for sorted keys, but I have concerns about where there is hidden
-    // threading buisness going on in MainApp.java with the oscP5 things, so I ain't touching a
+    // threading buisness going on in org.teton_landis.jake.osc_visualizer.VisualizerApplet.java with the oscP5 things, so I ain't touching a
     // > Note that this implementation is not synchronized. If multiple threads access a map concurrently,
     // > and at least one of the threads modifies the map structurally, it must be synchronized externally.
     //  -- TreeMap javadoc

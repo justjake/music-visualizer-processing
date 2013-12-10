@@ -1,3 +1,5 @@
+package org.teton_landis.jake.osc_visualizer;
+
 /**
  * All information in a complete OSC message from the server
  */

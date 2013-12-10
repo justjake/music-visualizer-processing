@@ -1,8 +1,10 @@
+package org.teton_landis.jake.osc_visualizer;
+
 import processing.core.*;
 import oscP5.*;
 import java.util.*;
 
-public class MainApp extends PApplet{
+public class VisualizerApplet extends PApplet{
 
     // display params for the cube thing
     public static final boolean LIGHTS = false;
@@ -34,7 +36,6 @@ public class MainApp extends PApplet{
     public PVector click;
 
     public PVector position;
-    public int z_translate;
 
     // spectrograph
     public Spectrograph spectro;
