@@ -10,6 +10,7 @@ import java.util.*;
 
 public class Spectrograph {
 
+
     public enum Direction {
         FORWARD, BACKWARD;
     }
@@ -29,11 +30,16 @@ public class Spectrograph {
     private Plane[] planes;
     public Direction direction;
 
+    public int signal_max;
+    public int signal_min;
+
     public Spectrograph(PApplet parent_, int depth, int z_spacing_, Direction direction_) {
         parent = parent_;
         planes = new Plane[depth];
         z_spacing = z_spacing_;
         direction = direction_;
+        signal_min = -18;
+        signal_max = 30;
     }
 
     void pushPlane(float[] peaks, Util.Color color) {
@@ -99,7 +105,7 @@ public class Spectrograph {
                 // the magic numbers here look pretty good with my music
                 // the source space is a number an amblitude in decibels, fom -96db to 30db
                 // my test signals are only interesting between about -15 and 30db
-                float unadjusted_height =  PApplet.map(planes[p].peaks[i], -18, 30, 0, 31.0f);
+                float unadjusted_height =  PApplet.map(planes[p].peaks[i], signal_min, signal_max, 0, 31.0f);
                 int cubes = (int) (unadjusted_height * PApplet.map(i, 0, planes[p].peaks.length-1, 0.5f, 2));
 
                 for (int j=0; j<cubes; j++) {

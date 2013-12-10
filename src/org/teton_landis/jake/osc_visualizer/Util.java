@@ -17,28 +17,6 @@ public class Util {
         return far;
     }
 
-    public class Scaler {
-        public double from_min, from_max, to_min, to_max;
-
-        Scaler(double fmin, double fmax, double tmin, double tmax) {
-            from_max = fmax;
-            from_min = fmin;
-            to_min = tmin;
-            to_max = tmax;
-        }
-
-        public double scale(double n) {
-            double in_range = from_max - from_min;
-            double out_range = to_max - to_min;
-
-            return ((n - from_min) / in_range) * out_range + to_min;
-        }
-
-        public void test(double expected, double n) {
-            parent.println("scaler.scale(n) -> " + this.scale(n) + ", expected "+expected);
-        }
-    }
-
     /*
     Wrapper around PApplet#color for EZ transforms
      */
@@ -101,7 +79,7 @@ public class Util {
     // > Note that this implementation is not synchronized. If multiple threads access a map concurrently,
     // > and at least one of the threads modifies the map structurally, it must be synchronized externally.
     //  -- TreeMap javadoc
-    public class DefaultHashMap<K,V> extends HashMap<K,V> {
+    public static class DefaultHashMap<K,V> extends HashMap<K,V> {
         protected V defaultValue;
         public DefaultHashMap(V defaultValue) {
             this.defaultValue = defaultValue;
@@ -110,6 +88,26 @@ public class Util {
         public V get(Object k) {
             V v = super.get(k);
             return ((v == null) && !this.containsKey(k)) ? this.defaultValue : v;
+        }
+    }
+
+    /**
+     * useful for storing scene setup stuff
+     */
+    public static class PositionRotation {
+        public PVector position;
+        public PVector rotation;
+
+        PositionRotation(PVector pos, PVector rot) {
+            position = pos;
+            rotation = rot;
+        }
+
+        // deep copy
+        public PositionRotation clone() {
+           return new PositionRotation(
+                   position.get(), rotation.get()
+           );
         }
     }
 }
