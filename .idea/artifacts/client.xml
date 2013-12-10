@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact name="osc_visualizer:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/osc_visualizer_jar</output-path>
+  <artifact name="client">
+    <output-path>$PROJECT_DIR$/out/artifacts/client</output-path>
     <root id="root">
       <element id="archive" name="osc_visualizer.jar">
         <element id="module-output" name="osc_visualizer" />
