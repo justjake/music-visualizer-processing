@@ -77,13 +77,14 @@ public class Spectrograph {
 
             // based on plane place, with only current color recognized
             int box_color = parent.lerpColor(
-                    key_color.clone().setOpacity(180).color(), // color at N frames ago
+                    key_color.clone().setOpacity(20).color(), // color at N frames ago
                     key_color.clone().reflect().setOpacity(255).setBrightness(200).color(), // color at now
                     frontness);
 
             // based on the color of the note
-            // int box_color = planes[p].color.setOpacity((int) PApplet.map(frontness, 0, 1, 0, 255)).color();
+            // box_color = planes[p].color.setOpacity((int) PApplet.map(frontness, 0, 1, 0, 255)).color();
 
+            // Currrent sound row is all-white
             if (direction==Direction.BACKWARD && p==planes.length-1)
                 box_color = parent.color(0, 0, 255, 255);
             if (direction==Direction.FORWARD && p==0)
@@ -94,7 +95,7 @@ public class Spectrograph {
             // z offset for this row
             int z = z_spacing * p;
 
-            for (int i=0; i<planes[0].peaks.length; i++) {
+            for (int i=0; i<planes[p].peaks.length; i++) {
                 parent.pushMatrix();
                 // translate to col start location
                 int x = cube_space + (int) ((cube_space + cube_height)*(i + 0.5));

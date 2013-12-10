@@ -11,7 +11,7 @@ public class VisualizerApplet extends PApplet{
     // display params for the cube thing
     public static final boolean LIGHTS = false;
     public static final int SPACING = -200;
-    public static final int DEPTH = 30;
+    public static final int DEPTH = 40;
 //    public static final PVector POSITION = new PVector(-100.0f, -300.0f, -200.0f);
 //    public static final PVector ROTATION = new PVector(0.29031897f, -0.33824158f, 0.0f);
 
@@ -166,6 +166,13 @@ public class VisualizerApplet extends PApplet{
             saturation = 0;
             brightness = 255;
             awaiting_render_attack = false;
+        }
+
+        // false sound. blackness
+        if (sound.bark.length == 0) {
+            saturation = 0;
+            hue = 0;
+            brightness = 0;
         }
 
         return util.new Color(
